@@ -1,0 +1,27 @@
+# systemd unit - installs LinuxGuard as a long-running, auto-restarting service.
+# Install:  sudo cp deploy/linuxguard.service /etc/systemd/system/
+#           sudo systemctl daemon-reload && sudo systemctl enable --now linuxguard
+# Logs:     journalctl -u linuxguard -f
+# Adjust WorkingDirectory / ExecStart paths to where you cloned the project.
+[Unit]
+Description=LinuxGuard monitoring service
+After=network.target
+
+[Service]
+Type=simple
+User=linuxguard
+Group=linuxguard
+WorkingDirectory=/opt/linuxguard
+EnvironmentFile=/etc/linuxguard.env
+ExecStart=/opt/linuxguard/.venv/bin/python -m backend.app
+Restart=on-failure
+RestartSec=5
+# Hardening: the service needs no extra privileges
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/opt/linuxguard/data
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+.env
+data/*.db
+data/*.db-wal
+data/*.db-shm
+data/backups/
+*.log
+LinuxGuard_Final.zip

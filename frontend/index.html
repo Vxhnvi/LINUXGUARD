@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LinuxGuard — Server Monitoring</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="logo">&#9654;</span> LinuxGuard <small id="hostname">—</small></div>
+  <div class="top-right">
+    <span id="overall" class="badge badge-unknown">connecting…</span>
+    <span class="muted">Updated: <span id="updated">never</span></span>
+    <button id="tokenBtn" class="btn" title="Set API token for protected endpoints">API token</button>
+  </div>
+</header>
+
+<div id="errorBanner" class="banner" hidden></div>
+
+<main>
+  <section class="cards">
+    <div class="card" id="cardCpu"><h3>CPU</h3><div class="big" id="cpuVal">—</div>
+      <div class="bar"><div id="cpuBar"></div></div><div class="muted" id="cpuSub">—</div></div>
+    <div class="card" id="cardMem"><h3>Memory</h3><div class="big" id="memVal">—</div>
+      <div class="bar"><div id="memBar"></div></div><div class="muted" id="memSub">—</div></div>
+    <div class="card" id="cardDisk"><h3>Disk</h3><div class="big" id="diskVal">—</div>
+      <div class="bar"><div id="diskBar"></div></div><div class="muted" id="diskSub">—</div></div>
+    <div class="card" id="cardNet"><h3>Network</h3><div class="big small" id="netVal">—</div>
+      <div class="muted" id="netSub">—</div><div class="muted" id="netPk">—</div></div>
+  </section>
+
+  <section class="grid2">
+    <div class="panel">
+      <div class="panel-head"><h2>Utilisation history (%)</h2>
+        <select id="range"><option value="15">15 min</option><option value="60" selected>1 hour</option>
+          <option value="360">6 hours</option><option value="1440">24 hours</option></select></div>
+      <div class="chart-box"><canvas id="usageChart"></canvas></div>
+      <div class="empty" id="usageEmpty" hidden>Collecting data… history appears after a few samples.</div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>Network traffic (KB/s)</h2></div>
+      <div class="chart-box"><canvas id="netChart"></canvas></div>
+      <div class="empty" id="netEmpty" hidden>Collecting data…</div>
+    </div>
+  </section>
+
+  <section class="grid2">
+    <div class="panel"><div class="panel-head"><h2>Server information</h2></div>
+      <table class="kv" id="infoTable"><tbody></tbody></table></div>
+    <div class="panel"><div class="panel-head"><h2>Alerts</h2>
+        <select id="alertFilter"><option value="all">All</option><option value="active">Active</option>
+          <option value="resolved">Resolved</option></select></div>
+      <div class="scroll"><table id="alertTable"><thead><tr><th>Time</th><th>Severity</th><th>Message</th><th>Status</th></tr></thead>
+        <tbody></tbody></table></div>
+      <div class="empty" id="alertEmpty" hidden>No alerts. All metrics are within thresholds.</div></div>
+  </section>
+
+  <section class="grid2">
+    <div class="panel"><div class="panel-head"><h2>Top processes</h2>
+        <select id="procSort"><option value="cpu">by CPU</option><option value="memory">by memory</option></select></div>
+      <div class="scroll"><table id="procTable"><thead><tr><th>PID</th><th>Name</th><th>User</th><th>CPU %</th><th>Mem %</th><th>Status</th></tr></thead>
+        <tbody></tbody></table></div>
+      <div class="empty" id="procMsg" hidden></div></div>
+    <div class="panel"><div class="panel-head"><h2>systemd services</h2></div>
+      <table id="svcTable"><thead><tr><th>Service</th><th>State</th><th>Running</th></tr></thead><tbody></tbody></table>
+      <div class="empty" id="svcMsg" hidden></div></div>
+  </section>
+</main>
+<footer class="muted">LinuxGuard — read-only monitoring. Data comes from the host OS via psutil; stored in SQLite.</footer>
+<script src="/vendor/chart.umd.js"></script>
+<script src="/dashboard.js"></script>
+</body>
+</html>

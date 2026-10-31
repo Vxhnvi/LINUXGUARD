@@ -1,0 +1,6 @@
+# Cron examples. Install with:  crontab -e   (paste lines, fix the path)
+# min hour dom mon dow  command
+# Daily DB backup at 02:30
+30 2 * * * /opt/linuxguard/scripts/backup.sh >> /var/log/linuxguard-backup.log 2>&1
+# Health check every 15 minutes (non-zero exit = warning/critical, visible in the log)
+*/15 * * * * /opt/linuxguard/scripts/health_check.sh >> /var/log/linuxguard-health.log 2>&1

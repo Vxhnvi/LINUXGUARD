@@ -1,0 +1,32 @@
+services:
+  linuxguard:
+    build: .
+    image: linuxguard:latest
+    container_name: linuxguard
+    restart: unless-stopped
+    stop_grace_period: 15s              # lets the collector shut down cleanly on SIGTERM
+    # Published on localhost only by default. For remote access use an SSH tunnel,
+    # or change to "5000:5000" AND restrict the AWS Security Group to your IP.
+    ports:
+      - "127.0.0.1:${LINUXGUARD_PORT:-5000}:5000"
+    environment:
+      LINUXGUARD_POLL_SECONDS: ${LINUXGUARD_POLL_SECONDS:-5}
+      LINUXGUARD_RETENTION_DAYS: ${LINUXGUARD_RETENTION_DAYS:-7}
+      LINUXGUARD_SERVICES: ${LINUXGUARD_SERVICES:-ssh,cron,docker,nginx}
+      LINUXGUARD_API_TOKEN: ${LINUXGUARD_API_TOKEN:-}
+      LINUXGUARD_HYSTERESIS: ${LINUXGUARD_HYSTERESIS:-5}
+    volumes:
+      - linuxguard-data:/app/data      # SQLite survives container rebuilds
+    # OPTIONAL (see docs/TROUBLESHOOTING.md): to list HOST processes instead of only the
+    # container's, uncomment. This widens what the container can see - understand the trade-off.
+    # pid: "host"
+    read_only: true                     # root filesystem is immutable...
+    tmpfs:
+      - /tmp                            # ...except /tmp and the data volume
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+volumes:
+  linuxguard-data:
